@@ -15,6 +15,9 @@
 
 				setPageEventListeners();
 
+				//init page height
+				VL.html.pageHeight.init();
+
 				//init uiLoader
 				VL.html.uiLoader.init();
 
