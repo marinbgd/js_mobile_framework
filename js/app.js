@@ -23,25 +23,25 @@
 			},
 
 			setPageEventListeners = function () {
-				$(document).on(VL.page.PAGE_BEFORE_LOAD, onPageBeforeLoad);
-				$(document).on(VL.page.PAGE_LOAD_SUCCESS, onPageLoadSuccess);
-				$(document).on(VL.page.PAGE_DRAW_FINISHED, onPageDrawFinish);
-				$(document).on(VL.page.PAGE_LOAD_FAIL, onPageLoadFail);
+				document.addEventListener(VL.page.PAGE_BEFORE_LOAD, onPageBeforeLoad, false);
+				document.addEventListener(VL.page.PAGE_LOAD_SUCCESS, onPageLoadSuccess, false);
+				document.addEventListener(VL.page.PAGE_DRAW_FINISHED, onPageDrawFinish, false);
+				document.addEventListener(VL.page.PAGE_LOAD_FAIL, onPageLoadFail, false);
 			},
 
 			onPageBeforeLoad = function (event) {
-				getControllerFromPageAndExec(event.pageName, 'destroyPage');
+				getControllerFromPageAndExec(event.detail.pageName, 'destroyPage');
 			},
 
 			onPageLoadSuccess = function (event) {
-				getControllerFromPageAndExec(event.pageName, 'beforeDraw');
+				getControllerFromPageAndExec(event.detail.pageName, 'beforeDraw');
 			},
 
 			onPageDrawFinish = function (event) {
-				getControllerFromPageAndExec(event.pageName, 'afterDraw');
+				getControllerFromPageAndExec(event.detail.pageName, 'afterDraw');
 			},
 
-			onPageLoadFail = function (event) {
+			onPageLoadFail = function () {
 				console.log('onPageLoadFail');
 				VL.html.uiLoader.hide();
 			},
@@ -137,7 +137,9 @@
 			};
 
 		//start the app
-		$(document).ready(initApp);
+		Zepto(function($){
+			initApp();
+		});
 
 		return {
 			getJSFile: getJSFile

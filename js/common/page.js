@@ -43,38 +43,49 @@
 			change = function (pageUrl) {
 
 				//this event should trigger current page controller destroy method
-				var event = $.Event(PAGE_BEFORE_LOAD, {pageName: currentRequestedPage});
-				$(document).trigger(event);
+				var event = new CustomEvent(PAGE_BEFORE_LOAD, {
+					detail: {
+						pageName: currentRequestedPage
+					}
+				});
+				document.dispatchEvent(event);
 
 				var absoluteUrl = viewsUrl + pageUrl;
 				currentRequestedPage = pageUrl.replace('.html', '');
 
 				$.ajax({
 					type: 'GET',
-					url: absoluteUrl
-				})
-					.done(function (response) {
+					url: absoluteUrl,
+					success: function (response) {
 						changePageSuccessHandler(response);
-					})
-					.fail(function (xhr, type) {
-						var event = $.Event(PAGE_LOAD_FAIL);
-						$(document).trigger(event);
-					});
+					},
+					error: function () {
+						var event = new CustomEvent(PAGE_LOAD_FAIL);
+						document.dispatchEvent(event);
+					}
+				});
 			},
 
 			changePageSuccessHandler = function (response) {
 				var event;
 				try {
-					event = $.Event(PAGE_LOAD_SUCCESS, {pageName: currentRequestedPage});
-					$(document).trigger(event);
+					event = new CustomEvent(PAGE_LOAD_SUCCESS, {
+						detail: {
+							pageName: currentRequestedPage
+						}
+					});
+					document.dispatchEvent(event);
 
 					pageHtmlContainer.innerHTML = response;
 
-					event = $.Event(PAGE_DRAW_FINISHED, {pageName: currentRequestedPage});
-					$(document).trigger(event);
+					event = new CustomEvent(PAGE_DRAW_FINISHED, {
+						detail: {
+							pageName: currentRequestedPage
+						}
+					});
+					document.dispatchEvent(event);
 
 					//change window location for history implementation
-					/*window.location.href = baseUrl + '#' + viewsDir + '/' + currentRequestedPage;*/
 					window.location.hash = currentRequestedPage;
 				} catch (error) {
 					console.log(error);
