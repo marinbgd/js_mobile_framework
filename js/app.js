@@ -2,21 +2,15 @@ VL.namespace('VL.app');
 
 VL.app = (function () {
 
+    'use strict';
+
     var storedControllers = [],
         storedJSControllers = [],
 
         initApp = function () {
             console.log('app init started');
 
-            var pathArray = window.location.href.split( '/' );
-            var protocol = pathArray[0];
-            var host = pathArray[2];
-            var url = protocol + '//' + host + '/';
-
-
-            VL.page.setBaseUrl( 'http://localhost/test/' );
-            //VL.page.setBaseUrl( url );
-            VL.page.setListenerOnAnchors();
+            VL.page.init();
 
             setPageEventListeners();
 
@@ -25,7 +19,6 @@ VL.app = (function () {
 
             //load first page
             VL.page.change( 'home.html' );
-
         },
 
         setPageEventListeners = function () {
@@ -62,7 +55,7 @@ VL.app = (function () {
             }
 
             //get dynamically controller
-            var scriptUrl = VL.page.getBaseUrl() + 'js/' + pathToJS;
+            var scriptUrl = VL.globals.getBaseUrl() + 'js/' + pathToJS;
             var success = false;
 
             $.ajax({
@@ -111,7 +104,7 @@ VL.app = (function () {
 
 
             //controller does not exist in cache, get it via ajax
-            var scriptUrl = VL.page.getBaseUrl() + 'js/controllers/' + pageName + '.js';
+            var scriptUrl = VL.globals.getBaseUrl() + 'js/controllers/' + pageName + '.js';
 
             $.ajax({
                 url: scriptUrl,

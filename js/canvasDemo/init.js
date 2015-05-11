@@ -1,7 +1,7 @@
 VL.namespace('VL.canvasDemo.init');
 
 VL.canvasDemo.init = (function () {
-    
+
     var canvasEl,
         ctx,
         canvasElHolder,
@@ -14,10 +14,9 @@ VL.canvasDemo.init = (function () {
         colorREnd = false,
         colorG = 0,
         colorB = 0,
-    
+
         init = function () {
             console.log('init init');
-
 
             //requestAnimFrame shiv
             window.requestAnimFrame = (function(){
@@ -126,8 +125,8 @@ VL.canvasDemo.init = (function () {
             return colorString;
         };
 
-    
-    
+
+
     return {
         init: init,
         setCanvasSizeCss: setCanvasSizeCss,
@@ -137,5 +136,5 @@ VL.canvasDemo.init = (function () {
         drawNicelyBgLogo: drawNicelyBgLogo,
         stopAnimation: stopAnimation
     };
-    
+
 }());
