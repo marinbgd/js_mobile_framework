@@ -1,140 +1,143 @@
-VL.namespace('VL.canvasDemo.init');
+(function () {
+	'use strict';
 
-VL.canvasDemo.init = (function () {
+	VL.namespace('VL.canvasDemo.init');
 
-    var canvasEl,
-        ctx,
-        canvasElHolder,
-        canvasWidth = 300,
-        canvasHeight = 300,
+	VL.canvasDemo.init = (function () {
 
-        animationID,
+		var canvasEl,
+			ctx,
+			canvasElHolder,
+			canvasWidth = 300,
+			canvasHeight = 300,
 
-        colorR = 0,
-        colorREnd = false,
-        colorG = 0,
-        colorB = 0,
+			animationID,
 
-        init = function () {
-            console.log('init init');
+			colorR = 0,
+			colorREnd = false,
+			colorG = 0,
+			colorB = 0,
 
-            //requestAnimFrame shiv
-            window.requestAnimFrame = (function(){
-                return  window.requestAnimationFrame ||
-                    window.webkitRequestAnimationFrame ||
-                    window.mozRequestAnimationFrame ||
-                    function( callback ){
-                        window.setTimeout(callback, 1000 / 60);
-                    };
-            }());
+			init = function () {
+				console.log('init init');
 
-            window.cancelAnimFrame = (function() {
-                return window.cancelAnimationFrame ||
-                        window.webkitCancelAnimationFrame ||
-                        window.mozCancelAnimationFrame;
-            }());
+				//requestAnimFrame shiv
+				window.requestAnimFrame = (function () {
+					return window.requestAnimationFrame ||
+						window.webkitRequestAnimationFrame ||
+						window.mozRequestAnimationFrame ||
+						function (callback) {
+							window.setTimeout(callback, 1000 / 60);
+						};
+				}());
 
+				window.cancelAnimFrame = (function () {
+					return window.cancelAnimationFrame ||
+						window.webkitCancelAnimationFrame ||
+						window.mozCancelAnimationFrame;
+				}());
 
-            canvasElHolder = document.getElementById('canvasDemoHolder');
-            canvasEl = document.getElementById('canvasDemo');
+				canvasElHolder = document.getElementById('canvasDemoHolder');
+				canvasEl = document.getElementById('canvasDemo');
 
-            setCanvasSizeInit();
+				setCanvasSizeInit();
 
-            ctx = canvasEl.getContext('2d');
-        },
+				ctx = canvasEl.getContext('2d');
+			},
 
-            setCanvasSizeInit = function () {
-                canvasWidth = canvasElHolder.offsetWidth;
-                canvasEl.width = canvasWidth;
-                canvasEl.height = canvasHeight;
-            },
+			setCanvasSizeInit = function () {
+				canvasWidth = canvasElHolder.offsetWidth;
+				canvasEl.width = canvasWidth;
+				canvasEl.height = canvasHeight;
+			},
 
-            setCanvasSizeCss = function () {
-                canvasWidth = canvasElHolder.offsetWidth;
-                canvasEl.style.width = canvasWidth + 'px';
-                canvasEl.style.height = canvasHeight + 'px';
-            },
+			setCanvasSizeCss = function () {
+				canvasWidth = canvasElHolder.offsetWidth;
+				canvasEl.style.width = canvasWidth + 'px';
+				canvasEl.style.height = canvasHeight + 'px';
+			},
 
-        paintBlack = function () {
-            ctx.fillStyle = '#000';
-            ctx.rect(0, 0, canvasWidth, canvasHeight);
-            ctx.fill();
-        },
+			paintBlack = function () {
+				ctx.fillStyle = '#000';
+				ctx.rect(0, 0, canvasWidth, canvasHeight);
+				ctx.fill();
+			},
 
-        drawLogo = function () {
-            //get image
-            var logo = document.getElementById('supermanLogo');
-            //ctx.drawImage(logo, 0, 0, 100, 80);
-            ctx.drawImage(logo, canvasWidth/2-50, canvasHeight/2-40, 100, 80);
-        },
+			drawLogo = function () {
+				//get image
+				var logo = document.getElementById('supermanLogo');
+				//ctx.drawImage(logo, 0, 0, 100, 80);
+				ctx.drawImage(logo, canvasWidth / 2 - 50, canvasHeight / 2 - 40, 100, 80);
+			},
 
-        drawRandomBgLogo = function () {
+			drawRandomBgLogo = function () {
 
-            //make random bg color
+				//make random bg color
 
-            var color = makeRandomRGB();
-            console.log(color);
+				var color = makeRandomRGB();
+				console.log(color);
 
-            ctx.fillStyle = color;
-            ctx.rect(0, 0, canvasWidth, canvasHeight);
-            ctx.fill();
+				ctx.fillStyle = color;
+				ctx.rect(0, 0, canvasWidth, canvasHeight);
+				ctx.fill();
 
-            var logo = document.getElementById('supermanLogo');
-            ctx.drawImage(logo, canvasWidth/2-50, canvasHeight/2-40, 100, 80);
+				var logo = document.getElementById('supermanLogo');
+				ctx.drawImage(logo, canvasWidth / 2 - 50, canvasHeight / 2 - 40, 100, 80);
 
-            animationID = requestAnimFrame(drawRandomBgLogo);
-        },
+				animationID = requestAnimFrame(drawRandomBgLogo);
+			},
 
-        drawNicelyBgLogo = function () {
+			drawNicelyBgLogo = function () {
 
-            if (colorR === 100) {
-                colorREnd = true;
-            }
+				if (colorR === 100) {
+					colorREnd = true;
+				}
 
-            if (colorR === 0 ) {
-                colorREnd = false;
-            }
+				if (colorR === 0) {
+					colorREnd = false;
+				}
 
-            if (colorREnd) {
-                colorR -= 1;
-            } else {
-                colorR += 1;
-            }
+				if (colorREnd) {
+					colorR -= 1;
+				} else {
+					colorR += 1;
+				}
 
-            ctx.fillStyle = 'rgb('+colorR+','+colorG+','+colorB+')';
-            ctx.rect(0, 0, canvasWidth, canvasHeight);
-            ctx.fill();
+				ctx.fillStyle = 'rgb(' + colorR + ',' + colorG + ',' + colorB + ')';
+				ctx.rect(0, 0, canvasWidth, canvasHeight);
+				ctx.fill();
 
-            var logo = document.getElementById('supermanLogo');
-            ctx.drawImage(logo, canvasWidth/2-50, canvasHeight/2-40, 100, 80);
+				var logo = document.getElementById('supermanLogo');
+				ctx.drawImage(logo, canvasWidth / 2 - 50, canvasHeight / 2 - 40, 100, 80);
 
-            animationID = requestAnimationFrame(drawNicelyBgLogo);
-        },
+				animationID = requestAnimationFrame(drawNicelyBgLogo);
+			},
 
-        stopAnimation = function () {
-            cancelAnimFrame(animationID);
-        },
-
-
-        makeRandomRGB = function () {
-            var r = Math.floor(Math.random() * 255 + 1);
-            var g = Math.floor(Math.random() * 255 + 1);
-            var b = Math.floor(Math.random() * 255 + 1);
-            var colorString = 'rgb('+r+','+g+','+b+')';
-
-            return colorString;
-        };
+			stopAnimation = function () {
+				cancelAnimFrame(animationID);
+			},
 
 
+			makeRandomRGB = function () {
+				var r = Math.floor(Math.random() * 255 + 1);
+				var g = Math.floor(Math.random() * 255 + 1);
+				var b = Math.floor(Math.random() * 255 + 1);
+				var colorString = 'rgb(' + r + ',' + g + ',' + b + ')';
 
-    return {
-        init: init,
-        setCanvasSizeCss: setCanvasSizeCss,
-        paintBlack: paintBlack,
-        drawLogo: drawLogo,
-        drawRandomBgLogo: drawRandomBgLogo,
-        drawNicelyBgLogo: drawNicelyBgLogo,
-        stopAnimation: stopAnimation
-    };
+				return colorString;
+			};
+
+
+		return {
+			init: init,
+			setCanvasSizeCss: setCanvasSizeCss,
+			paintBlack: paintBlack,
+			drawLogo: drawLogo,
+			drawRandomBgLogo: drawRandomBgLogo,
+			drawNicelyBgLogo: drawNicelyBgLogo,
+			stopAnimation: stopAnimation
+		};
+
+	}());
 
 }());
