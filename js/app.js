@@ -1,98 +1,121 @@
 VL.namespace('VL.app');
 
 VL.app = (function () {
-    
+
     var storedControllers = [],
-    
+        storedJSControllers = [],
+
         initApp = function () {
             console.log('app init started');
-        
+
+            var pathArray = window.location.href.split( '/' );
+            var protocol = pathArray[0];
+            var host = pathArray[2];
+            var url = protocol + '//' + host + '/';
+
 
             VL.page.setBaseUrl( 'http://localhost/test/' );
+            //VL.page.setBaseUrl( url );
             VL.page.setListenerOnAnchors();
-            
+
             setPageEventListeners();
-            
+
             //init uiLoader
             VL.html.uiLoader.init();
-            
+
             //load first page
             VL.page.change( 'home.html' );
-        
+
         },
-        
+
         setPageEventListeners = function () {
-            
+
             $(document).on( VL.page.PAGE_BEFORE_LOAD, onPageBeforeLoad);
             $(document).on( VL.page.PAGE_LOAD_SUCCESS, onPageLoadSuccess);
             $(document).on( VL.page.PAGE_DRAW_FINISHED, onPageDrawFinish);
             $(document).on( VL.page.PAGE_LOAD_FAIL, onPageLoadFail);
-            
+
         },
-        
+
         onPageBeforeLoad = function (event) {
-            console.log('onPageBeforeLoad');
-            
             //should trigger destroy method of the current page controller
-            var controller = getControllerFromPage(event.pageName);
-            
-            if (controller && typeof controller.destroyPage === 'function') {
-                controller.destroyPage();
-            }
+            getControllerFromPageAndExec(event.pageName, 'destroyPage');
         },
-        
+
         onPageLoadSuccess = function (event) {
-            console.log('onPageLoadSuccess');
-            
-            var controller = getControllerFromPage(event.pageName);
-            
-            if (controller && typeof controller.beforeDraw === 'function') {
-                controller.beforeDraw();
-            }
+            getControllerFromPageAndExec(event.pageName, 'beforeDraw');
         },
-        
+
         onPageDrawFinish = function (event) {
-            console.log('onPageDrawFinish');
-            
-            var controller = getControllerFromPage(event.pageName);
-            
-            if (controller && typeof controller.afterDraw === 'function') {
-                controller.afterDraw();
-            }
+            getControllerFromPageAndExec(event.pageName, 'afterDraw');
         },
-    
+
         onPageLoadFail = function (event) {
             console.log('onPageLoadFail');
+            VL.html.uiLoader.hide();
         },
-        
-        getControllerFromPage = function (pageName) {
-            
+
+        getJSFile = function (pathToJS) {
+
+            if(typeof pathToJS === "undefined" || !(pathToJS) ) {
+                return undefined;
+            }
+
+            //get dynamically controller
+            var scriptUrl = VL.page.getBaseUrl() + 'js/' + pathToJS;
+            var success = false;
+
+            $.ajax({
+                url: scriptUrl,
+                async: false,
+                type: 'get',
+                crossDomain: false,
+                dataType: 'script',
+                cache: false,
+                beforeSend: function () {
+                    //VL.html.uiLoader.show();
+                },
+                success: function () {
+                    success = true;
+                },
+                error: function () {
+                    success = false;
+                },
+                complete: function () {
+                    //VL.html.uiLoader.hide();
+                }
+
+            });
+
+            return success;
+        },
+
+        getControllerFromPageAndExec = function (pageName, successExecFunctionName) {
+
             if(typeof pageName === "undefined" || !(pageName) ) {
                 return undefined;
             }
-            
-            var storedController = storedControllers[pageName];
-            if(storedController) {
-                return storedController;
+
+            if(typeof successExecFunctionName === "undefined" || !(successExecFunctionName) ) {
+                return undefined;
             }
 
-            
-            //get dynamically controller
+            //get controller from cache and execute function if exists
+            var storedController = storedControllers[pageName];
+            if(storedController) {
+                if (storedController[successExecFunctionName] && typeof storedController[successExecFunctionName] === 'function') {
+                    storedController[successExecFunctionName]();
+                    return;
+                }
+            }
+
+
+            //controller does not exist in cache, get it via ajax
             var scriptUrl = VL.page.getBaseUrl() + 'js/controllers/' + pageName + '.js';
-            
-            /*$.getScript( scriptUrl )
-                .done( function( script, textStatus ) {
-                    console.log(111);
-                    var controller = VL.controllers[pageName];
-                    storedControllers[pageName] = controller;
-                    return controller;
-                })
-                .fail( function( jqxhr, settings, exception ) {
-                    console.log('controller load fail');
-                });*/
-            
+
             $.ajax({
                 url: scriptUrl,
+                type: 'get',
                 async: false,
                 crossDomain: false,
                 dataType: 'script',
@@ -101,26 +124,31 @@ VL.app = (function () {
                     VL.html.uiLoader.show();
                 },
                 success: function () {
-                    console.log(111);
                     var controller = VL.controllers[pageName];
                     storedControllers[pageName] = controller;
-                    return controller;
+
+                    //exec success callback function
+                    if (controller[successExecFunctionName] && typeof controller[successExecFunctionName] === 'function') {
+                        controller[successExecFunctionName]();
+                    }
                 },
                 error: function () {
                     console.log('controller load fail');
-                    return null;
                 },
                 complete: function () {
                     VL.html.uiLoader.hide();
                 }
-                
+
             });
-            
+
         };
-    
-    
-    
+
+
     //start the app
     $(document).ready(initApp);
-    
+
+    return {
+        getJSFile: getJSFile
+    };
+
 }());
