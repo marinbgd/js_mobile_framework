@@ -1,19 +1,19 @@
-js_mobile_framework
+simple_spa_framework
 ===================
 
-JavaScript framework / template for one page applications - Loading partial HTML views (pages) and related JS page controllers (async with caching)
+JavaScript SPA framework
 
 
-- This is a template / framework for one page HTML + JS applications.
+- This is a framework for SPA - Single Page Applications.
 - MVC
 - It can be succesfully used with the Phonegap on any mobile platform.
-- It uses jQuery
+- It uses Zepto
 - Very light
 - Simple to use
 - Similar to jQuery Mobile (*page load)
 
 Description:
-It will load partial HTML views (pages) into the viewport,
+It will load partial HTML templates (pages) into the viewport,
 then get related JS controller of the page and execute it.
 
 There are default events triggered when page is loaded / destroyed:
