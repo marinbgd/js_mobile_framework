@@ -5,7 +5,7 @@
 
 	VL.controllers.canvas_demo = (function () {
 
-		var jsLoaded;
+		var libLoadedPromise;
 
 		return {
 
@@ -14,27 +14,22 @@
 
 				//get canvasDemo js
 				var canvasDemoInitJsUrl = 'canvasDemo/init.js';
-				jsLoaded = VL.app.getJSFile(canvasDemoInitJsUrl);
-
-				if (!jsLoaded) {
-					console.log('load error');
-					return;
+				if (!libLoadedPromise) {
+					libLoadedPromise = VL.app.getJSFile(canvasDemoInitJsUrl);
 				}
 			},
 
 			afterDraw: function () {
 				console.log('VL.controllers.canvasDemo afterDraw');
 
-				if (!jsLoaded) {
-					return;
-				}
+				libLoadedPromise.then( function () {
+					VL.canvasDemo.init.init();
+					$(window).on('resize', VL.canvasDemo.init.setCanvasSizeCss);
 
-				VL.canvasDemo.init.init();
-				$(window).on('resize', VL.canvasDemo.init.setCanvasSizeCss);
+					VL.canvasDemo.init.drawNicelyBgLogo();
 
-				VL.canvasDemo.init.drawNicelyBgLogo();
-
-				$('#canvasDemo').on('click', VL.canvasDemo.init.stopAnimation);
+					$('#canvasDemo').on('click', VL.canvasDemo.init.stopAnimation);
+				});
 			},
 
 			destroyPage: function () {

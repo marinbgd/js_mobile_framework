@@ -57,31 +57,15 @@
 
 				//get dynamically controller
 				var scriptUrl = VL.globals.getBaseUrl() + 'js/' + pathToJS;
-				var success = false;
 
-				$.ajax({
+				return Q($.ajax({
 					url: scriptUrl,
 					async: false,
 					type: 'get',
 					crossDomain: false,
 					dataType: 'script',
-					cache: false,
-					beforeSend: function () {
-						//VL.html.uiLoader.show();
-					},
-					success: function () {
-						success = true;
-					},
-					error: function () {
-						success = false;
-					},
-					complete: function () {
-						//VL.html.uiLoader.hide();
-					}
-
-				});
-
-				return success;
+					cache: false
+				}));
 			},
 
 			getControllerFromPageAndExec = function (pageNameWithDirStructure, successExecFunctionName) {
@@ -109,17 +93,18 @@
 				//controller does not exist in cache, get it via ajax
 				var scriptUrl = VL.globals.getBaseUrl() + 'js/controllers/' + pageNameWithDirStructure + '.js';
 
-				$.ajax({
+				VL.html.uiLoader.show();
+
+				Q($.ajax({
 					url: scriptUrl,
 					type: 'get',
 					async: false,
 					crossDomain: false,
 					dataType: 'script',
-					cache: false,
-					beforeSend: function () {
-						VL.html.uiLoader.show();
-					},
-					success: function () {
+					cache: false
+				}))
+					.then( function () {
+
 						var controller = VL.controllers[pageNameWithUnderscore];
 						storedControllers[pageNameWithUnderscore] = controller;
 
@@ -127,16 +112,12 @@
 						if (controller[successExecFunctionName] && typeof controller[successExecFunctionName] === 'function') {
 							controller[successExecFunctionName]();
 						}
-					},
-					error: function () {
+					}, function (error) {
 						console.log('controller load fail');
-					},
-					complete: function () {
+					})
+					.finally( function () {
 						VL.html.uiLoader.hide();
-					}
-
-				});
-
+					});
 			};
 
 		//start the app

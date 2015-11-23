@@ -8,22 +8,15 @@
 		var baseUrl,
 			viewsUrl,
 			viewsDir = 'views',
-			apiUrl = 'http://91.185.100.46:8880/api/',
+			apiUrl = null,
 
 			setBaseUrl = function () {
 
-				/* use this when deployed */
-				/*try{
-				 // if used with cordova / phonegap
-				 baseUrl = cordova.file.applicationDirectory + 'www/';
-				 } catch (error) {
-				 if( !location.origin ) {
-				 location.origin = location.protocol + "//" + location.host;
-				 }
-				 baseUrl = location.origin + '/';
-				 }*/
+				if( !location.origin ) {
+					location.origin = location.protocol + "//" + location.host;
+				}
+				baseUrl = location.origin + '/js_mobile_framework/';
 
-				baseUrl = 'http://localhost/test/';
 				setViewsUrl();
 			},
 
