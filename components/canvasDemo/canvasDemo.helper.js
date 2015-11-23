@@ -1,9 +1,9 @@
 (function () {
 	'use strict';
 
-	VL.namespace('VL.canvasDemo.init');
+	VL.namespace('VL.components.canvasDemo.helper');
 
-	VL.canvasDemo.init = (function () {
+	VL.components.canvasDemo.helper = (function () {
 
 		var canvasEl,
 			ctx,
