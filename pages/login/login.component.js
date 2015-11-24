@@ -1,21 +1,21 @@
 (function () {
 	'use strict';
 
-	VL.namespace('VL.components.login');
+	VL.namespace('VL.pages.login');
 
-	VL.components.login = (function () {
+	VL.pages.login = (function () {
 
 		var init = function () {
 
 				var loginComponentData = {
-					state: 'login',
-					viewUrl: 'components/login/login.html',
+					name: 'login',
+					viewUrl: 'pages/login/login.html',
 					beforeDrawFn: beforeDrawFn,
 					afterDrawFn: afterDrawFn,
 					destroyFn: destroyFn
 				};
 
-				VL.components.registerComponent(loginComponentData);
+				VL.pages.registerPage(loginComponentData);
 			},
 
 			beforeDrawFn = function () {

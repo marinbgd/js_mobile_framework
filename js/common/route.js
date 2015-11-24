@@ -6,7 +6,7 @@
 	VL.route = (function () {
 
 		var pageHtmlContainer,
-			currentComponent = null,
+			currentPage = null,
 
 			init = function () {
 				pageHtmlContainer = document.getElementById('content');
@@ -28,26 +28,26 @@
 				}
 			},
 
-			go = function (stateName) {
+			go = function (pageName) {
 
 				//call destroy function of previous component, if any
-				if (currentComponent) {
-					currentComponent.destroyFn();
+				if (currentPage) {
+					currentPage.destroyFn();
 				}
 
-				currentComponent = VL.components.getComponentByStateName(stateName);
+				currentPage = VL.pages.getPageByStateName(pageName);
 
-				console.log(currentComponent);
+				console.log(currentPage);
 
-				if (!currentComponent) {
+				if (!currentPage) {
 					console.log('Not valid route; No component associated.');
 					return;
 				}
 
 				//get html
-				_getHtml(currentComponent.viewUrl)
+				_getHtml(currentPage.viewUrl)
 					.then( function (html) {
-						_startRoute(html);
+						_changeRoute(html);
 					});
 
 			},
@@ -59,7 +59,7 @@
 					request.open('GET', url, true);
 					request.onload = onload;
 					request.onerror = onerror;
-					request.onprogress = onprogress;
+					//request.onprogress = onprogress;
 					request.send();
 
 					function onload() {
@@ -81,15 +81,15 @@
 					return deferred.promise;
 				},
 
-				_startRoute = function (html) {
-					currentComponent.beforeDrawFn();
+				_changeRoute = function (html) {
+					currentPage.beforeDrawFn();
 					pageHtmlContainer.innerHTML = html;
 
-					currentComponent.afterDrawFn();
+					currentPage.afterDrawFn();
 					VL.html.uiLoader.hide();
 
 					//change window location for history implementation
-					window.location.hash = currentComponent.state;
+					window.location.hash = currentPage.state;
 				};
 
 		return {

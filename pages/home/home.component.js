@@ -1,33 +1,33 @@
 (function () {
 	'use strict';
 
-	VL.namespace('VL.components.about');
+	VL.namespace('VL.pages.home');
 
-	VL.components.about = (function () {
+	VL.pages.home = (function () {
 
 		var init = function () {
 
 				var componentData = {
-					state: 'about',
-					viewUrl: 'components/about/about.html',
+					name: 'home',
+					viewUrl: 'pages/home/home.html',
 					beforeDrawFn: beforeDrawFn,
 					afterDrawFn: afterDrawFn,
 					destroyFn: destroyFn
 				};
 
-				VL.components.registerComponent(componentData);
+				VL.pages.registerPage(componentData);
 			},
 
 			beforeDrawFn = function () {
-				console.log('about beforeDrawFn');
+				console.log('home beforeDrawFn');
 			},
 
 			afterDrawFn = function () {
-				console.log('about afterDrawFn');
+				console.log('home afterDrawFn');
 			},
 
 			destroyFn = function () {
-				console.log('about destroyFn');
+				console.log('home destroyFn');
 			};
 
 

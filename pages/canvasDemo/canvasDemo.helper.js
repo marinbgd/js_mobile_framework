@@ -1,9 +1,9 @@
 (function () {
 	'use strict';
 
-	VL.namespace('VL.components.canvasDemo.helper');
+	VL.namespace('VL.pages.canvasDemo.helper');
 
-	VL.components.canvasDemo.helper = (function () {
+	VL.pages.canvasDemo.helper = (function () {
 
 		var canvasEl,
 			ctx,

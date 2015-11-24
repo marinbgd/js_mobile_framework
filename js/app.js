@@ -17,11 +17,11 @@
 			//init uiLoader
 			VL.html.uiLoader.init();
 
-			//init components - register all components
-			VL.components.login.init();
-			VL.components.home.init();
-			VL.components.about.init();
-			VL.components.canvasDemo.init();
+			//init pages - register all pages
+			VL.pages.login.init();
+			VL.pages.home.init();
+			VL.pages.about.init();
+			VL.pages.canvasDemo.init();
 
 			VL.route.go('home');
 		};
